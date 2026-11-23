@@ -35,9 +35,9 @@ const INVITATION_DETAILS = {
 };
 
 /**
- * Reusable Blur-to-Normal wrapper triggered when scrolled into view
+ * Smooth GPU-only reveal (opacity + translate3d) so scrolling stays jitter-free
  */
-function BlurReveal({ children, delay = 0, className = '' }) {
+function SmoothReveal({ children, delay = 0, className = '' }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -52,7 +52,7 @@ function BlurReveal({ children, delay = 0, className = '' }) {
           observer.disconnect();
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.12, rootMargin: '0px 0px -20px 0px' }
     );
 
     observer.observe(el);
@@ -64,11 +64,12 @@ function BlurReveal({ children, delay = 0, className = '' }) {
       ref={ref}
       style={{
         transitionDelay: `${delay}ms`,
+        willChange: 'transform, opacity',
       }}
-      className={`transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+      className={`transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
         visible
-          ? 'opacity-100 blur-0 translate-y-0 scale-100'
-          : 'opacity-0 blur-md translate-y-5 scale-[0.97]'
+          ? 'opacity-100 translate-y-0'
+          : 'opacity-0 translate-y-4'
       } ${className}`}
     >
       {children}
@@ -195,7 +196,7 @@ function ScratchCard({ value, label, isRevealed, onReveal }) {
   return (
     <div className="flex flex-col items-center">
       <div className="relative w-full aspect-[4/4.8] rounded-xl bg-[#1E1C21] border border-[#E5C675]/65 shadow-[0_10px_28px_rgba(0,0,0,0.65)] overflow-hidden select-none">
-        {/* Underlying Date Text — Always crisp (never blurred) */}
+        {/* Underlying Date Text — Always crisp */}
         <div className="absolute inset-0 flex items-center justify-center px-2">
           <span
             className={`font-editorial text-[#F6EFE6] tracking-wide ${
@@ -318,7 +319,7 @@ function MonogramCrest() {
 }
 
 /**
- * Flow-Safe Arched Invitation Frame (Adapts naturally to text height)
+ * Flow-Safe Arched Invitation Frame
  */
 function ArchedInvitationCard({ children }) {
   return (
@@ -349,6 +350,25 @@ export default function App() {
   const secondVideoRef = useRef(null);
   const dateSectionRef = useRef(null);
 
+  // Measure viewport height once (and on orientation/width change) so mobile address-bar
+  // hide/show during scrolling NEVER resizes or jitters the hero video.
+  const [heroHeight, setHeroHeight] = useState(() =>
+    typeof window !== 'undefined' ? window.innerHeight : 800
+  );
+
+  useEffect(() => {
+    let lastWidth = window.innerWidth;
+    const handleResize = () => {
+      // Ignore vertical-only address bar changes while scrolling
+      if (Math.abs(window.innerWidth - lastWidth) > 40) {
+        lastWidth = window.innerWidth;
+        setHeroHeight(window.innerHeight);
+      }
+    };
+    window.addEventListener('resize', handleResize, { passive: true });
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const [started, setStarted] = useState(false);
   const [playSecondVideo, setPlaySecondVideo] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -362,20 +382,21 @@ export default function App() {
 
   const allRevealed = revealedCards.day && revealedCards.month && revealedCards.year;
 
-  // Lock page scrolling until "Scroll down" appears on the second video
+  // Prevent scroll only before "Scroll down" is available, without toggling overflow mid-scroll
   useEffect(() => {
-    if (!playSecondVideo) {
-      window.scrollTo(0, 0);
-      document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
-    }
+    if (playSecondVideo) return;
+
+    const preventScroll = (e) => {
+      e.preventDefault();
+    };
+
+    window.scrollTo(0, 0);
+    window.addEventListener('wheel', preventScroll, { passive: false });
+    window.addEventListener('touchmove', preventScroll, { passive: false });
 
     return () => {
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
+      window.removeEventListener('wheel', preventScroll);
+      window.removeEventListener('touchmove', preventScroll);
     };
   }, [playSecondVideo]);
 
@@ -435,15 +456,15 @@ export default function App() {
   };
 
   return (
-    <div
-      className={`min-h-screen bg-[#0B0A0C] text-[#F5EFE6] ${
-        !playSecondVideo ? 'h-screen-mobile overflow-hidden' : ''
-      }`}
-    >
+    <div className="min-h-screen bg-[#0B0A0C] text-[#F5EFE6]">
       {/* =========================================================
-          1. FULL-SCREEN MOBILE VIDEO SECTION (/diya.png -> videos)
+          1. LOCKED-HEIGHT MOBILE VIDEO SECTION (/diya.png -> videos)
       ========================================================= */}
-      <section className="relative w-full h-screen-mobile overflow-hidden bg-black">
+      <section
+        style={{ height: `${heroHeight}px` }}
+        className="relative w-full overflow-hidden bg-black shrink-0"
+      >
+        {/* 1st Video: Plays Once */}
         <video
           ref={firstVideoRef}
           src="/video.mp4"
@@ -451,11 +472,12 @@ export default function App() {
           playsInline
           preload="auto"
           onEnded={handleFirstVideoEnded}
-          className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-700 ${
+          className={`hero-video-layer absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-700 ${
             playSecondVideo ? 'opacity-0 pointer-events-none' : 'opacity-100'
           }`}
         />
 
+        {/* 2nd Video: Plays on Loop After 1st Finishes */}
         <video
           ref={secondVideoRef}
           src="/video2.mp4"
@@ -463,11 +485,12 @@ export default function App() {
           muted={isMuted}
           playsInline
           preload="auto"
-          className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-700 ${
+          className={`hero-video-layer absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-700 ${
             playSecondVideo ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
         />
 
+        {/* Full-Screen Cover Image Before Tap (/diya.png) */}
         {!started && (
           <div
             role="button"
@@ -489,6 +512,7 @@ export default function App() {
           </div>
         )}
 
+        {/* Minimal Mute / Unmute Button */}
         {started && (
           <button
             onClick={toggleMute}
@@ -499,8 +523,9 @@ export default function App() {
           </button>
         )}
 
+        {/* Lower "Scroll down" Prompt (Appears once 2nd video begins) */}
         {playSecondVideo && (
-          <div className="absolute inset-x-0 bottom-0 z-20 pt-10 pb-3 sm:pb-4 bg-gradient-to-t from-[#0D0C0F] via-[#0D0C0F]/65 to-transparent flex flex-col items-center animate-blur-reveal">
+          <div className="absolute inset-x-0 bottom-0 z-20 pt-10 pb-3 sm:pb-4 bg-gradient-to-t from-[#0D0C0F] via-[#0D0C0F]/65 to-transparent flex flex-col items-center animate-smooth-entrance">
             <button
               onClick={scrollToDate}
               className="flex flex-col items-center gap-0.5 hover:opacity-90 transition cursor-pointer"
@@ -520,25 +545,25 @@ export default function App() {
       {playSecondVideo && (
         <section
           ref={dateSectionRef}
-          className="textured-night-bg relative px-5 sm:px-6 pt-14 pb-24 flex flex-col items-center text-center overflow-hidden animate-blur-reveal"
+          className="textured-night-bg relative px-5 sm:px-6 pt-14 pb-24 flex flex-col items-center text-center overflow-hidden animate-smooth-entrance"
         >
           <div className="w-full max-w-sm mx-auto">
-            <BlurReveal delay={50}>
+            <SmoothReveal delay={40}>
               <h2 className="font-script gold-shine-text text-6xl sm:text-7xl leading-tight">
                 The Date
               </h2>
               <OrnamentDivider className="w-56 sm:w-64" />
-            </BlurReveal>
+            </SmoothReveal>
 
-            <BlurReveal delay={180}>
+            <SmoothReveal delay={120}>
               <p className="font-editorial italic text-lg sm:text-xl text-[#F0DFB3] mb-8 flex items-center justify-center gap-2">
                 <span className="gold-shine-text not-italic text-xs">✦</span>
                 <span>Scratch to reveal the date</span>
                 <span className="gold-shine-text not-italic text-xs">✦</span>
               </p>
-            </BlurReveal>
+            </SmoothReveal>
 
-            <BlurReveal delay={300}>
+            <SmoothReveal delay={200}>
               <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-10">
                 <ScratchCard
                   value={EVENT_DETAILS.day}
@@ -559,13 +584,13 @@ export default function App() {
                   onReveal={() => setRevealedCards((prev) => ({ ...prev, year: true }))}
                 />
               </div>
-            </BlurReveal>
+            </SmoothReveal>
 
             <div
-              className={`mb-16 transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`mb-16 transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 allRevealed
-                  ? 'opacity-100 blur-0 translate-y-0 scale-100 pointer-events-auto'
-                  : 'opacity-0 blur-lg translate-y-4 scale-95 pointer-events-none'
+                  ? 'opacity-100 translate-y-0 pointer-events-auto'
+                  : 'opacity-0 translate-y-3 pointer-events-none'
               }`}
             >
               <p className="font-editorial text-xl sm:text-2xl text-[#F5EFE6] leading-snug">
@@ -595,7 +620,7 @@ export default function App() {
           {/* =========================================================
               3. ARCHED INVITATION SECTION
           ========================================================= */}
-          <BlurReveal delay={120} className="w-full max-w-md mx-auto">
+          <SmoothReveal delay={100} className="w-full max-w-md mx-auto">
             <ArchedInvitationCard>
               <MonogramCrest />
 
@@ -644,7 +669,7 @@ export default function App() {
                 </p>
               </div>
             </ArchedInvitationCard>
-          </BlurReveal>
+          </SmoothReveal>
         </section>
       )}
     </div>
