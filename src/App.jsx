@@ -1,18 +1,37 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Volume2, VolumeX, ChevronDown, CalendarPlus, Check } from 'lucide-react';
 
-// --- Edit Date & Calendar Event Details Here ---
+// --- Edit Date, Couple & Invitation Details Here ---
 const EVENT_DETAILS = {
   day: '14',
   month: 'February',
   year: '2027',
   subline1: 'Sunday, at 7:00 pm',
   subline2: 'By the lake, with dinner after the pheras',
+  dividerImage: '/divider.png',
   calendarTitle: 'Wedding Celebration',
   calendarLocation: 'By the lake',
   calendarDescription: 'By the lake, with dinner after the pheras',
   startDateTime: '20270214T190000',
   endDateTime: '20270214T233000',
+};
+
+const INVITATION_DETAILS = {
+  monogramTop: 'TANYA & VIKRAM',
+  monogramCenter: 'TV',
+  monogramBottom: 'तान्वी • विक्रम',
+  invocation: '॥ श्री गणेशाय नमः ॥',
+  introLine1: 'With the blessings of our elders,',
+  introLine2: 'you are invited to the wedding of',
+  brideName: 'Tanya Sharma',
+  brideParentsLabel: 'DAUGHTER OF',
+  brideParents: 'SMT. ANJALI & SHRI RAJEEV SHARMA',
+  connector: 'with',
+  groomName: 'Vikram Mehra',
+  groomParentsLabel: 'SON OF',
+  groomParents: 'SMT. KAVITA & SHRI SUNIL MEHRA',
+  fullDate: 'Sunday, 14 February 2027',
+  venue: 'The Haveli, Lake Pichola, Udaipur',
 };
 
 /**
@@ -33,7 +52,7 @@ function BlurReveal({ children, delay = 0, className = '' }) {
           observer.disconnect();
         }
       },
-      { threshold: 0.18 }
+      { threshold: 0.15 }
     );
 
     observer.observe(el);
@@ -58,80 +77,29 @@ function BlurReveal({ children, delay = 0, className = '' }) {
 }
 
 /**
- * Ornamental Gold & Pearl Floral Medallion Divider Below "The Date"
+ * Image-Based Ornamental Divider (/divider.png)
  */
-function DateOrnamentDivider() {
+function OrnamentDivider({ className = 'w-56 sm:w-64' }) {
+  const [imgMissing, setImgMissing] = useState(false);
+
+  if (imgMissing) {
+    return (
+      <div className="my-4 flex items-center justify-center gap-3 text-[#E6C673]/80 select-none">
+        <span className="h-[1px] w-14 bg-gradient-to-r from-transparent to-[#E6C673]/70" />
+        <span className="text-xs">✦</span>
+        <span className="h-[1px] w-14 bg-gradient-to-l from-transparent to-[#E6C673]/70" />
+      </div>
+    );
+  }
+
   return (
-    <div className="my-4 flex items-center justify-center select-none" aria-hidden="true">
-      <svg
-        viewBox="0 0 320 44"
-        className="w-64 sm:w-72 h-auto overflow-visible drop-shadow-[0_2px_8px_rgba(212,175,55,0.22)]"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <linearGradient id="ornamentGold" x1="20" y1="22" x2="300" y2="22" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#B88E3B" stopOpacity="0.35" />
-            <stop offset="25%" stopColor="#E6C673" />
-            <stop offset="50%" stopColor="#FFF1BD" />
-            <stop offset="75%" stopColor="#E6C673" />
-            <stop offset="100%" stopColor="#B88E3B" stopOpacity="0.35" />
-          </linearGradient>
-        </defs>
-
-        {/* Left Vine & Leaves */}
-        <path
-          d="M138 22C112 22 92 11 66 13C46 14.5 32 21 16 22"
-          stroke="url(#ornamentGold)"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-        />
-        <path
-          d="M128 22C112 31 94 34 74 30"
-          stroke="url(#ornamentGold)"
-          strokeWidth="1.2"
-          strokeLinecap="round"
-        />
-        <ellipse cx="104" cy="13" rx="8" ry="3.5" transform="rotate(-18 104 13)" fill="url(#ornamentGold)" />
-        <ellipse cx="78" cy="14" rx="7" ry="3" transform="rotate(-12 78 14)" fill="url(#ornamentGold)" />
-        <ellipse cx="96" cy="30" rx="7.5" ry="3.2" transform="rotate(16 96 30)" fill="url(#ornamentGold)" />
-        <circle cx="56" cy="16" r="2.6" fill="#FFF3C4" />
-        <circle cx="40" cy="21" r="2" fill="#E6C673" />
-
-        {/* Right Vine & Leaves (Mirrored) */}
-        <path
-          d="M182 22C208 22 228 11 254 13C274 14.5 288 21 304 22"
-          stroke="url(#ornamentGold)"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-        />
-        <path
-          d="M192 22C208 31 226 34 246 30"
-          stroke="url(#ornamentGold)"
-          strokeWidth="1.2"
-          strokeLinecap="round"
-        />
-        <ellipse cx="216" cy="13" rx="8" ry="3.5" transform="rotate(18 216 13)" fill="url(#ornamentGold)" />
-        <ellipse cx="242" cy="14" rx="7" ry="3" transform="rotate(12 242 14)" fill="url(#ornamentGold)" />
-        <ellipse cx="224" cy="30" rx="7.5" ry="3.2" transform="rotate(-16 224 30)" fill="url(#ornamentGold)" />
-        <circle cx="264" cy="16" r="2.6" fill="#FFF3C4" />
-        <circle cx="280" cy="21" r="2" fill="#E6C673" />
-
-        {/* Side blossoms */}
-        <circle cx="136" cy="22" r="5" stroke="url(#ornamentGold)" strokeWidth="1.2" fill="#181512" />
-        <circle cx="136" cy="22" r="2" fill="#FFF3C4" />
-        <circle cx="184" cy="22" r="5" stroke="url(#ornamentGold)" strokeWidth="1.2" fill="#181512" />
-        <circle cx="184" cy="22" r="2" fill="#FFF3C4" />
-
-        {/* Center Medallion */}
-        <circle cx="160" cy="22" r="11" stroke="url(#ornamentGold)" strokeWidth="1.4" fill="#1A1612" />
-        <circle cx="160" cy="22" r="7.5" stroke="url(#ornamentGold)" strokeWidth="1" strokeDasharray="2 2" />
-        <circle cx="160" cy="22" r="3.2" fill="#FFF3C4" />
-        <circle cx="160" cy="8.5" r="1.8" fill="#E6C673" />
-        <circle cx="160" cy="35.5" r="1.8" fill="#E6C673" />
-        <circle cx="146.5" cy="22" r="1.8" fill="#E6C673" />
-        <circle cx="173.5" cy="22" r="1.8" fill="#E6C673" />
-      </svg>
+    <div className="my-4 flex items-center justify-center select-none">
+      <img
+        src={EVENT_DETAILS.dividerImage}
+        alt=""
+        onError={() => setImgMissing(true)}
+        className={`${className} h-auto object-contain mx-auto drop-shadow-[0_2px_8px_rgba(212,175,55,0.22)]`}
+      />
     </div>
   );
 }
@@ -272,6 +240,110 @@ function ScratchCard({ value, label, isRevealed, onReveal }) {
   );
 }
 
+/**
+ * Circular Crest Badge at Top of Arch Frame
+ */
+function MonogramCrest() {
+  return (
+    <div className="relative w-24 h-24 mx-auto mb-4 flex items-center justify-center select-none">
+      <svg viewBox="0 0 120 120" className="w-full h-full overflow-visible">
+        <defs>
+          <path
+            id="crestTopArc"
+            d="M 18,60 A 42,42 0 1,1 102,60"
+            fill="none"
+          />
+          <linearGradient id="crestGold" x1="0" y1="0" x2="120" y2="120">
+            <stop offset="0%" stopColor="#E6C673" />
+            <stop offset="50%" stopColor="#FFF1BD" />
+            <stop offset="100%" stopColor="#B88E3B" />
+          </linearGradient>
+        </defs>
+
+        <circle
+          cx="60"
+          cy="60"
+          r="52"
+          fill="#161419"
+          fillOpacity="0.85"
+          stroke="url(#crestGold)"
+          strokeWidth="1.2"
+        />
+        <circle
+          cx="60"
+          cy="60"
+          r="34"
+          fill="none"
+          stroke="url(#crestGold)"
+          strokeWidth="0.9"
+          strokeOpacity="0.65"
+        />
+
+        <text
+          fill="#E6C673"
+          fontSize="8.2"
+          letterSpacing="2.2"
+          fontWeight="500"
+        >
+          <textPath href="#crestTopArc" startOffset="50%" textAnchor="middle">
+            {INVITATION_DETAILS.monogramTop}
+          </textPath>
+        </text>
+
+        <text
+          x="60"
+          y="67"
+          textAnchor="middle"
+          className="font-editorial"
+          fill="#FFF3C4"
+          fontSize="26"
+          letterSpacing="1"
+        >
+          {INVITATION_DETAILS.monogramCenter}
+        </text>
+
+        <text
+          x="60"
+          y="102"
+          textAnchor="middle"
+          fill="#D8C79E"
+          fontSize="7.2"
+          letterSpacing="1.2"
+        >
+          {INVITATION_DETAILS.monogramBottom}
+        </text>
+      </svg>
+    </div>
+  );
+}
+
+/**
+ * Flow-Safe Arched Invitation Frame (Adapts naturally to text height)
+ */
+function ArchedInvitationCard({ children }) {
+  return (
+    <div className="relative w-full max-w-md mx-auto pt-4">
+      <div
+        style={{
+          borderTopLeftRadius: '170px',
+          borderTopRightRadius: '170px',
+        }}
+        className="relative bg-[#151318]/65 border border-[#9A8E7A]/55 p-2 shadow-[0_14px_40px_rgba(0,0,0,0.6)]"
+      >
+        <div
+          style={{
+            borderTopLeftRadius: '162px',
+            borderTopRightRadius: '162px',
+          }}
+          className="border border-[#E6C673]/40 px-6 sm:px-9 pt-6 pb-12 text-center"
+        >
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const firstVideoRef = useRef(null);
   const secondVideoRef = useRef(null);
@@ -369,10 +441,9 @@ export default function App() {
       }`}
     >
       {/* =========================================================
-          1. FULL-SCREEN MOBILE VIDEO SECTION
+          1. FULL-SCREEN MOBILE VIDEO SECTION (/diya.png -> videos)
       ========================================================= */}
       <section className="relative w-full h-screen-mobile overflow-hidden bg-black">
-        {/* 1st Video: Plays Once */}
         <video
           ref={firstVideoRef}
           src="/video.mp4"
@@ -385,7 +456,6 @@ export default function App() {
           }`}
         />
 
-        {/* 2nd Video: Plays on Loop After 1st Finishes */}
         <video
           ref={secondVideoRef}
           src="/video2.mp4"
@@ -398,7 +468,6 @@ export default function App() {
           }`}
         />
 
-        {/* Full-Screen Cover Image Before Tap */}
         {!started && (
           <div
             role="button"
@@ -420,7 +489,6 @@ export default function App() {
           </div>
         )}
 
-        {/* Minimal Mute / Unmute Button */}
         {started && (
           <button
             onClick={toggleMute}
@@ -431,7 +499,6 @@ export default function App() {
           </button>
         )}
 
-        {/* Lower "Scroll down" Prompt (Appears once 2nd video begins) */}
         {playSecondVideo && (
           <div className="absolute inset-x-0 bottom-0 z-20 pt-10 pb-3 sm:pb-4 bg-gradient-to-t from-[#0D0C0F] via-[#0D0C0F]/65 to-transparent flex flex-col items-center animate-blur-reveal">
             <button
@@ -448,23 +515,21 @@ export default function App() {
       </section>
 
       {/* =========================================================
-          2. SCRATCH TO REVEAL THE DATE SECTION
+          2. SCRATCH TO REVEAL THE DATE + ARCHED INVITATION CARD
       ========================================================= */}
       {playSecondVideo && (
         <section
           ref={dateSectionRef}
-          className="textured-night-bg relative px-6 pt-14 pb-24 flex flex-col items-center text-center overflow-hidden animate-blur-reveal"
+          className="textured-night-bg relative px-5 sm:px-6 pt-14 pb-24 flex flex-col items-center text-center overflow-hidden animate-blur-reveal"
         >
           <div className="w-full max-w-sm mx-auto">
-            {/* Heading: "The Date" + Ornamental Divider */}
             <BlurReveal delay={50}>
               <h2 className="font-script gold-shine-text text-6xl sm:text-7xl leading-tight">
                 The Date
               </h2>
-              <DateOrnamentDivider />
+              <OrnamentDivider className="w-56 sm:w-64" />
             </BlurReveal>
 
-            {/* Subtitle Prompt */}
             <BlurReveal delay={180}>
               <p className="font-editorial italic text-lg sm:text-xl text-[#F0DFB3] mb-8 flex items-center justify-center gap-2">
                 <span className="gold-shine-text not-italic text-xs">✦</span>
@@ -473,7 +538,6 @@ export default function App() {
               </p>
             </BlurReveal>
 
-            {/* 3 Scratch Cards Grid (Day / Month / Year) */}
             <BlurReveal delay={300}>
               <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-10">
                 <ScratchCard
@@ -497,9 +561,8 @@ export default function App() {
               </div>
             </BlurReveal>
 
-            {/* Revealed Details + "Add to calendar" Prompt */}
             <div
-              className={`transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`mb-16 transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 allRevealed
                   ? 'opacity-100 blur-0 translate-y-0 scale-100 pointer-events-auto'
                   : 'opacity-0 blur-lg translate-y-4 scale-95 pointer-events-none'
@@ -528,6 +591,60 @@ export default function App() {
               </button>
             </div>
           </div>
+
+          {/* =========================================================
+              3. ARCHED INVITATION SECTION
+          ========================================================= */}
+          <BlurReveal delay={120} className="w-full max-w-md mx-auto">
+            <ArchedInvitationCard>
+              <MonogramCrest />
+
+              <p className="font-editorial text-base sm:text-lg tracking-wider text-[#F0DFB3] mb-1">
+                {INVITATION_DETAILS.invocation}
+              </p>
+              <OrnamentDivider className="w-48 sm:w-56" />
+
+              <p className="font-editorial italic text-lg sm:text-xl text-[#EDE3D2] leading-snug mt-3">
+                {INVITATION_DETAILS.introLine1}
+              </p>
+              <p className="font-editorial italic text-lg sm:text-xl text-[#EDE3D2] leading-snug mb-6">
+                {INVITATION_DETAILS.introLine2}
+              </p>
+
+              <h3 className="font-script gold-shine-text text-5xl sm:text-6xl leading-tight">
+                {INVITATION_DETAILS.brideName}
+              </h3>
+              <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.26em] text-[#C8BEB0] mt-2">
+                {INVITATION_DETAILS.brideParentsLabel}
+              </p>
+              <p className="font-editorial text-xs sm:text-sm uppercase tracking-[0.16em] text-[#F5EFE6] mt-1 leading-relaxed">
+                {INVITATION_DETAILS.brideParents}
+              </p>
+
+              <p className="font-editorial italic text-lg text-[#E6C673] my-4">
+                {INVITATION_DETAILS.connector}
+              </p>
+
+              <h3 className="font-script gold-shine-text text-5xl sm:text-6xl leading-tight">
+                {INVITATION_DETAILS.groomName}
+              </h3>
+              <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.26em] text-[#C8BEB0] mt-2">
+                {INVITATION_DETAILS.groomParentsLabel}
+              </p>
+              <p className="font-editorial text-xs sm:text-sm uppercase tracking-[0.16em] text-[#F5EFE6] mt-1 leading-relaxed">
+                {INVITATION_DETAILS.groomParents}
+              </p>
+
+              <div className="mt-8 pt-3">
+                <p className="font-editorial text-lg sm:text-xl text-[#F5EFE6] tracking-wide">
+                  {INVITATION_DETAILS.fullDate}
+                </p>
+                <p className="font-editorial italic text-base sm:text-lg text-[#C8BEB0] mt-1">
+                  {INVITATION_DETAILS.venue}
+                </p>
+              </div>
+            </ArchedInvitationCard>
+          </BlurReveal>
         </section>
       )}
     </div>
