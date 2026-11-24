@@ -135,7 +135,11 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
         </button>
       )}
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-28 bg-gradient-to-t from-[#0A0507] via-[#0A0507]/70 to-transparent" />
+      <div
+        className={`pointer-events-none absolute inset-x-0 bottom-0 z-20 h-28 bg-gradient-to-t from-[#0A0507] via-[#0A0507]/70 to-transparent transition-opacity duration-[1500ms] ease-out ${
+          playSecondVideo ? 'opacity-100' : 'opacity-0'
+        }`}
+      />
 
       {playSecondVideo && (
         <div className="absolute inset-x-0 bottom-0 z-30 pt-10 pb-3 sm:pb-4 flex flex-col items-center animate-smooth-entrance">
