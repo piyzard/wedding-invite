@@ -11,6 +11,7 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
     typeof window !== 'undefined' ? window.innerHeight : 800
   );
   const [started, setStarted] = useState(false);
+  const [firstVideoPlaying, setFirstVideoPlaying] = useState(false);
   const [secondVideoReady, setSecondVideoReady] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
 
@@ -35,6 +36,7 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
   useEffect(() => {
     applyPlaybackRate(firstVideoRef.current);
     applyPlaybackRate(secondVideoRef.current);
+    firstVideoRef.current?.load();
     secondVideoRef.current?.load();
   }, []);
 
@@ -52,6 +54,7 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
 
   const handleStart = async () => {
     setStarted(true);
+    setFirstVideoPlaying(false);
     const v1 = firstVideoRef.current;
     if (!v1) return;
     try {
@@ -102,7 +105,11 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
         playsInline
         preload="auto"
         onLoadedMetadata={() => applyPlaybackRate(firstVideoRef.current)}
-        onPlay={() => applyPlaybackRate(firstVideoRef.current)}
+        onCanPlay={() => applyPlaybackRate(firstVideoRef.current)}
+        onPlaying={() => {
+          applyPlaybackRate(firstVideoRef.current);
+          setFirstVideoPlaying(true);
+        }}
         onEnded={handleFirstVideoEnded}
         className="hero-video-layer z-10 absolute inset-0 w-full h-full object-cover object-center"
       />
@@ -125,22 +132,28 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
         }`}
       />
 
-      {!started && (
-        <div
-          role="button"
-          tabIndex={0}
-          onClick={handleStart}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              handleStart();
-            }
-          }}
-          className="absolute inset-0 z-30 cursor-pointer select-none bg-[#0A0507]"
-        >
-          <img src="/diya.png" alt="" className="w-full h-full object-cover object-center" />
-        </div>
-      )}
+      <div
+        role={!started ? 'button' : undefined}
+        tabIndex={!started ? 0 : undefined}
+        onClick={!started ? handleStart : undefined}
+        onKeyDown={
+          !started
+            ? (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleStart();
+                }
+              }
+            : undefined
+        }
+        className={`absolute inset-0 z-30 select-none bg-[#0A0507] transition-opacity duration-200 ${
+          !started || !firstVideoPlaying
+            ? 'opacity-100 cursor-pointer'
+            : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        <img src="/diya.png" alt="" className="w-full h-full object-cover object-center" />
+      </div>
 
       {started && (
         <button
