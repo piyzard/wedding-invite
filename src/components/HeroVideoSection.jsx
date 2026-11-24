@@ -271,6 +271,15 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
         </div>
       </div>
 
+      {/* Bottom-right circular white logo with shadow under the logo and above the white background */}
+      <div className="pointer-events-none absolute bottom-15 right-4 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center p-1.5 shadow-[0_4px_14px_rgba(0,0,0,0.85),inset_0_2px_6px_rgba(0,0,0,0.25)] overflow-hidden">
+        <img
+          src="/logo.png"
+          alt=""
+          className="w-full h-full object-contain rounded-full drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)]"
+        />
+      </div>
+
       {started && (
         <button
           onClick={toggleMute}
