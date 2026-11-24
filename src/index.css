@@ -17,6 +17,19 @@
   .font-editorial {
     font-family: 'Cormorant Garamond', Georgia, serif;
   }
+
+  /* Consistent, slightly smaller scale for secondary/editorial labels & subtext */
+  .site-small-text {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 640px) {
+    .site-small-text {
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+  }
 }
 
 /* Smooth GPU-only reveal */

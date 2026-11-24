@@ -16,11 +16,11 @@ function SlidableArchGallery({ photos }) {
   };
 
   return (
-    <div className="w-full mt-4 select-none">
+    <div className="w-full mt-7 select-none">
       <div
         ref={trackRef}
         onScroll={handleScroll}
-        className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-3 px-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-3 pl-7 pr-6 scroll-pl-7 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {photos.map((item, index) => {
           const clipId = `arch-photo-clip-${index}`;
@@ -28,10 +28,10 @@ function SlidableArchGallery({ photos }) {
 
           return (
             <div
-              key={`${item.caption}-${index}`}
+              key={`${item.caption || item.src}-${index}`}
               className="snap-start shrink-0 w-[68vw] max-w-[265px] flex flex-col items-center"
             >
-              <div className="relative w-full aspect-[4/4.65] p-[5px] bg-[#2D0E17]/90 border border-[#C79A6B]/55 shadow-[0_14px_34px_rgba(0,0,0,0.65)]">
+              <div className="relative w-full aspect-[4/5] p-[5px] bg-[#2D0E17]/90 border border-[#C79A6B]/55 shadow-[0_8px_20px_rgba(0,0,0,0.32)]">
                 <div className="relative w-full h-full border border-[#E6C673]/55 overflow-hidden bg-[#1D080E]">
                   <svg className="w-0 h-0 absolute" aria-hidden="true">
                     <defs>
@@ -41,14 +41,16 @@ function SlidableArchGallery({ photos }) {
                     </defs>
                   </svg>
 
-                  <div style={{ clipPath: `url(#${clipId})` }} className="w-full h-full bg-[#36111C]">
+                  <div
+                    style={{ clipPath: `url(#${clipId})` }}
+                    className="w-full h-full aspect-[4/5] bg-[#36111C] overflow-hidden"
+                  >
                     {!hasError ? (
                       <img
                         src={item.src}
-                        alt={item.caption}
-                        loading="lazy"
+                        alt={item.caption || `Memory ${index + 1}`}
                         onError={() => setImgErrors((p) => ({ ...p, [index]: true }))}
-                        className="w-full h-full object-cover object-center"
+                        className="w-full h-full aspect-[4/5] object-cover object-center block"
                       />
                     ) : (
                       <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-[#451523] to-[#230911] px-4 text-center">
@@ -61,17 +63,13 @@ function SlidableArchGallery({ photos }) {
                   </div>
                 </div>
               </div>
-
-              <p className="font-editorial text-lg sm:text-[19px] text-[#F8EFEA] mt-3.5 text-center leading-snug line-clamp-1">
-                {item.caption}
-              </p>
             </div>
           );
         })}
       </div>
 
       <div className="mt-5 flex flex-col items-center gap-2.5">
-        <p className="font-editorial italic text-base sm:text-lg text-[#E6D2D6]/90 tracking-wide">
+        <p className="site-small-text font-editorial italic text-[#E6D2D6]/90 tracking-wide">
           Swipe to see more
         </p>
 
@@ -97,39 +95,10 @@ export default function StoryAndGallery() {
         <SectionHeading>{STORY_DETAILS.heading}</SectionHeading>
 
         <SmoothReveal delay={140}>
-          <p className="font-editorial text-xl sm:text-[22px] text-[#F8EFEA] leading-relaxed mt-5 mb-14 px-2">
+          <p className="font-editorial text-base sm:text-lg text-[#F8EFEA] leading-relaxed text-justify [text-align-last:center] whitespace-pre-line mt-5 mb-14 px-1">
             {STORY_DETAILS.paragraph}
           </p>
         </SmoothReveal>
-
-        {/*
-        <div className="relative text-left pl-3 sm:pl-4 mb-20">
-          {STORY_DETAILS.milestones.map((item, idx) => (
-            <SmoothReveal
-              key={item.date}
-              delay={idx * 100}
-              className={`relative pl-8 ${
-                idx === STORY_DETAILS.milestones.length - 1 ? 'pb-2' : 'pb-9'
-              }`}
-            >
-              <span
-                aria-hidden="true"
-                className="absolute left-[7px] top-[18px] bottom-0 w-[1px] bg-gradient-to-b from-[#E6C673]/75 to-[#E6C673]/25"
-              />
-              <span
-                aria-hidden="true"
-                className="absolute left-[1px] top-[6px] w-[13px] h-[13px] rotate-45 border border-[#E6C673] bg-[#1E080F] shadow-[0_0_8px_rgba(230,198,115,0.3)]"
-              />
-              <h3 className="font-script gold-shine-text text-3xl sm:text-4xl leading-none mb-1.5">
-                {item.date}
-              </h3>
-              <p className="font-editorial text-lg sm:text-xl text-[#F8EFEA]/95 leading-snug">
-                {item.description}
-              </p>
-            </SmoothReveal>
-          ))}
-        </div>
-        */}
 
         <SectionHeading delay={100}>{STORY_DETAILS.nextHeading}</SectionHeading>
       </div>

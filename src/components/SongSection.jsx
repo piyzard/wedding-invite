@@ -4,11 +4,11 @@ import { SmoothReveal, SectionHeading } from './SharedUI';
 
 export const SONG_DETAILS = {
   heading: 'Our song',
-  title: 'Kasoor',
-  artist: 'Prateek Kuhad',
+  title: 'Fallingforyou',
+  artist: 'The 1975',
   coverImage: '/song-cover.jpg',
-  audioSrc: '/kasoor.mp3',
-  spotifyUrl: 'https://open.spotify.com/search/Kasoor%20Prateek%20Kuhad',
+  audioSrc: '/fallingforyou.mp3',
+  spotifyUrl: 'https://open.spotify.com/track/7LbUv7w2z7rEbNqp1uIL9U?si=qD2zb2dCSS61mI0X2zOr9A&utm_source=copy-link',
   footerText: 'Plays on Spotify',
 };
 

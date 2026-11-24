@@ -12,9 +12,8 @@ function CelebrationArchFrame({ src, alt, variant }) {
           <img
             src={src}
             alt={alt}
-            loading="lazy"
             onError={() => setImgError(true)}
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover object-center block"
           />
         ) : (
           <div className="w-full h-full relative bg-gradient-to-b from-[#2B1519] via-[#1C0B10] to-[#120609] flex items-end justify-center p-2">
@@ -24,7 +23,10 @@ function CelebrationArchFrame({ src, alt, variant }) {
                 {variant === 'mehendi' && (
                   <div className="w-12 h-3 rounded-full bg-[#4E7A56] border border-[#E6C673]/50 shadow" />
                 )}
-                {variant === 'sangeet' && (
+                {(variant === 'grooms-haldi' ||
+                  variant === 'totto-ceremony' ||
+                  variant === 'brides-haldi' ||
+                  variant === 'sangeet') && (
                   <div className="flex items-end gap-1.5">
                     <span className="w-3 h-3 rounded-full bg-[#D9B35C]/70 border border-[#FFF1BD]/60" />
                     <span className="w-3.5 h-3.5 rounded-full bg-[#FFF1BD]/80" />
@@ -37,6 +39,9 @@ function CelebrationArchFrame({ src, alt, variant }) {
                   </div>
                 )}
               </div>
+              <span className="mt-1.5 text-[10px] text-[#E6D2D6]/75 px-2 text-center break-all">
+                Missing: public{src}
+              </span>
             </div>
           </div>
         )}
