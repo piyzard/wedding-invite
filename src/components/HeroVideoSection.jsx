@@ -259,7 +259,7 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
               You&apos;re invited
             </p>
             <p className="mt-1.5 text-[10px] sm:text-xs uppercase tracking-[0.28em] text-[#F8EFEA]/95 drop-shadow-[0_3px_12px_rgba(0,0,0,0.95)]">
-              TO A WEDDING IN KOLKATA
+              TO CELEBRATE A BEAUTIFUL BEGINNING
             </p>
           </div>
 
