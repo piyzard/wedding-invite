@@ -2,7 +2,7 @@ export const EVENT_DETAILS = {
   day: '11',
   month: 'February',
   year: '2027',
-  subline1: 'Thursday, at 6:00 pm',
+  subline1: 'Thursday, at 6:00 PM',
   subline2: 'By the lake, with dinner after the pheras',
   dividerImage: '/divider.png',
   calendarTitle: 'Wedding Celebration',
@@ -25,15 +25,15 @@ export const INVITATION_DETAILS = {
   connector: 'with',
   groomName: 'Satyabrata Palit',
   groomParentsLabel: 'SON OF',
-  groomParents: 'SMT. SUBRATA & SHRI SUBRATA PALIT',
+  groomParents: 'SMT. SUBRATAA & SHRI SUBRATA PALIT',
   fullDate: 'Thursday, 11 February 2027',
   venue: 'Swapnobhor Hall & Lawn, New Town',
 };
 
 export const STORY_DETAILS = {
-  heading: 'Our story',
+  heading: 'Meet us',
   paragraph:
-    "We met at a friend's Holi in Indore, both trying to stay out of the colour. Five years, one long year apart and many plates of poha later, we are getting married.",
+    "Introduced through common friends on social media, what began as a connection slowly turned into a friendship, and eventually, something much more. Six years later, we’re still each other’s favourite person, biggest cheerleader and, most importantly, favourite company. Piyali is happiest around good food, F.R.I.E.N.D.S., Taarak Mehta and her favourite mindless  chaotic comedies, while Satya has a soft spot for gaming, all things Marvel and a good movie. From sharing meals to sharing laughs and making the most of the simplest moments, we have built a little world of our own. And now, six years of friendship, love and being gloriously ourselves have led us to this moment — GETTING MARRIED!",
   milestones: [
     {
       date: 'Holi 2021',
@@ -131,7 +131,7 @@ export const CELEBRATIONS_DATA = {
 export const COUNTDOWN_DETAILS = {
   heading: 'Counting down to',
   targetDate: '2027-02-11T18:00:00+05:30',
-  subtitle: 'the Wedding Ceremony, on Thursday, 11 February',
+  subtitle: 'The Wedding Ceremony, on Thursday, 11 February',
 };
 
 export const LOCATION_DETAILS = {
@@ -161,21 +161,21 @@ export const TRAVEL_AND_DRESS_DETAILS = {
   dressCodePalettes: [
     {
       title: 'Mehendi',
-      hindiTitle: 'मेहंदी',
-      description: 'Greens and soft pinks',
-      colors: ['#5E8B53', '#EFA8B8', '#F4E6CE'],
+      hindiTitle: 'মেহেন্দি',
+      description: 'Wear your comfiest pyjamas!',
+      colors: ['#1e5631', '#efa8b8', '#ce6825'],
     },
     {
-      title: 'Sangeet',
-      hindiTitle: 'संगीत',
-      description: 'Jewel tones and sparkle',
-      colors: ['#4B3D8F', '#B62247', '#D6B152'],
+      title: 'Haldi',
+      hindiTitle: 'গায়ে হলুদ',
+      description: 'Yellow, pink or whatever survives the haldi!',
+      colors: ['#df119a', '#d6b152'],
     },
     {
       title: 'Wedding',
-      hindiTitle: 'विवाह',
-      description: 'Traditional Indian, in any colour you love',
-      colors: ['#BC2146', '#E58D2D', '#FBF5EA'],
+      hindiTitle: 'শুভ বিবাহ',
+      description: 'Traditional Indian, in any colour you love. The bride called dibs on the colour red!',
+      colors: ['#70193d', '#f3e9d2', '#0c2952'],
     },
   ],
 };

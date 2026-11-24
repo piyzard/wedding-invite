@@ -97,11 +97,12 @@ export default function StoryAndGallery() {
         <SectionHeading>{STORY_DETAILS.heading}</SectionHeading>
 
         <SmoothReveal delay={140}>
-          <p className="font-editorial text-xl sm:text-[22px] text-[#F8EFEA] leading-relaxed mt-5 mb-12 px-2">
+          <p className="font-editorial text-xl sm:text-[22px] text-[#F8EFEA] leading-relaxed mt-5 mb-14 px-2">
             {STORY_DETAILS.paragraph}
           </p>
         </SmoothReveal>
 
+        {/*
         <div className="relative text-left pl-3 sm:pl-4 mb-20">
           {STORY_DETAILS.milestones.map((item, idx) => (
             <SmoothReveal
@@ -128,6 +129,7 @@ export default function StoryAndGallery() {
             </SmoothReveal>
           ))}
         </div>
+        */}
 
         <SectionHeading delay={100}>{STORY_DETAILS.nextHeading}</SectionHeading>
       </div>

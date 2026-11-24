@@ -5,6 +5,7 @@ import { SmoothReveal, SectionHeading } from './SharedUI';
 export default function TravelDressSection() {
   return (
     <div className="w-full pt-8 pb-24">
+      {/*
       <div className="w-full max-w-sm mx-auto px-5 sm:px-6">
         <SectionHeading>{TRAVEL_AND_DRESS_DETAILS.gettingThereHeading}</SectionHeading>
 
@@ -27,8 +28,9 @@ export default function TravelDressSection() {
           </p>
         </SmoothReveal>
       </div>
+      */}
 
-      <div className="w-full max-w-sm mx-auto mt-16 px-5 sm:px-6">
+      <div className="w-full max-w-sm mx-auto px-5 sm:px-6">
         <SectionHeading delay={80}>{TRAVEL_AND_DRESS_DETAILS.dressCodeHeading}</SectionHeading>
 
         <SmoothReveal delay={160}>
