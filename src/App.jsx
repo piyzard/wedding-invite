@@ -31,7 +31,13 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#1A070C] text-[#F8EFEA]">
+    <div
+      className={`text-[#F8EFEA] ${
+        playSecondVideo
+          ? 'min-h-dvh bg-[#1A070C]'
+          : 'h-dvh overflow-hidden bg-black'
+      }`}
+    >
       <HeroVideoSection
         playSecondVideo={playSecondVideo}
         setPlaySecondVideo={setPlaySecondVideo}
