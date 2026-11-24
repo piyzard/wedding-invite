@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { STORY_DETAILS, GALLERY_PHOTOS } from '../data/weddingData';
-import { SmoothReveal, OrnamentDivider } from './SharedUI';
+import { SmoothReveal, SectionHeading } from './SharedUI';
 
 function SlidableArchGallery({ photos }) {
   const trackRef = useRef(null);
@@ -94,12 +94,7 @@ export default function StoryAndGallery() {
   return (
     <>
       <div className="w-full max-w-sm mx-auto mt-20 px-5 sm:px-6">
-        <SmoothReveal delay={60}>
-          <h2 className="font-script gold-shine-text text-6xl sm:text-7xl leading-tight">
-            {STORY_DETAILS.heading}
-          </h2>
-          <OrnamentDivider className="w-56 sm:w-64" />
-        </SmoothReveal>
+        <SectionHeading>{STORY_DETAILS.heading}</SectionHeading>
 
         <SmoothReveal delay={140}>
           <p className="font-editorial text-xl sm:text-[22px] text-[#F8EFEA] leading-relaxed mt-5 mb-12 px-2">
@@ -134,12 +129,7 @@ export default function StoryAndGallery() {
           ))}
         </div>
 
-        <SmoothReveal delay={100}>
-          <h2 className="font-script gold-shine-text text-6xl sm:text-7xl leading-tight">
-            {STORY_DETAILS.nextHeading}
-          </h2>
-          <OrnamentDivider className="w-56 sm:w-64" />
-        </SmoothReveal>
+        <SectionHeading delay={100}>{STORY_DETAILS.nextHeading}</SectionHeading>
       </div>
 
       <SmoothReveal delay={160} className="w-full max-w-md mx-auto">

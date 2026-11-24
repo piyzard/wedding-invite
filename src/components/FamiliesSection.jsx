@@ -1,5 +1,5 @@
 import React from 'react';
-import { SmoothReveal, OrnamentDivider } from './SharedUI';
+import { SmoothReveal, SectionHeading } from './SharedUI';
 
 export const FAMILIES_DETAILS = {
   heading: 'Our families',
@@ -36,12 +36,7 @@ export const FAMILIES_DETAILS = {
 export default function FamiliesSection() {
   return (
     <div className="w-full max-w-sm mx-auto pt-8 pb-24 px-5 sm:px-6">
-      <SmoothReveal delay={60}>
-        <h2 className="font-script gold-shine-text text-6xl sm:text-7xl leading-tight">
-          {FAMILIES_DETAILS.heading}
-        </h2>
-        <OrnamentDivider className="w-56 sm:w-64" />
-      </SmoothReveal>
+      <SectionHeading>{FAMILIES_DETAILS.heading}</SectionHeading>
 
       <div className="mt-7 space-y-9">
         {FAMILIES_DETAILS.groups.map((group, idx) => (

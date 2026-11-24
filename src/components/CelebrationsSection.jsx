@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CELEBRATIONS_DATA } from '../data/weddingData';
-import { SmoothReveal, OrnamentDivider } from './SharedUI';
+import { SmoothReveal, SectionHeading } from './SharedUI';
 
 function CelebrationArchFrame({ src, alt, variant }) {
   const [imgError, setImgError] = useState(false);
@@ -49,12 +49,7 @@ export default function CelebrationsSection({ onOpenCalendar }) {
   return (
     <div className="w-full px-5 sm:px-6">
       <div className="w-full max-w-md mx-auto mt-20">
-        <SmoothReveal delay={60}>
-          <h2 className="font-script gold-shine-text text-6xl sm:text-7xl leading-tight">
-            {CELEBRATIONS_DATA.heading}
-          </h2>
-          <OrnamentDivider className="w-56 sm:w-64" />
-        </SmoothReveal>
+        <SectionHeading>{CELEBRATIONS_DATA.heading}</SectionHeading>
 
         <div className="relative mt-10">
           <div

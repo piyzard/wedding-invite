@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Minus, Plus } from 'lucide-react';
-import { SmoothReveal, OrnamentDivider } from './SharedUI';
+import { SmoothReveal, SectionHeading } from './SharedUI';
 
 export const RSVP_DETAILS = {
   heading: 'Will you join us?',
   subtitle: 'Please let us know how many of you are coming to each function, by 20 January.',
   nameLabel: 'YOUR NAME',
   namePlaceholder: 'e.g. Shreya Sharma',
-  whatsappNumber: '919876543210', // Replace with host WhatsApp number (with country code, no +)
+  whatsappNumber: '918910322203',
   buttonText: 'SEND ON WHATSAPP',
   disclaimer: 'This opens WhatsApp with your reply written out. Nothing is sent until you press send.',
   functions: [
@@ -43,12 +43,7 @@ export default function RsvpSection() {
 
   return (
     <div className="w-full max-w-sm mx-auto pt-4 pb-24 px-5 sm:px-6">
-      <SmoothReveal delay={60}>
-        <h2 className="font-script gold-shine-text text-6xl sm:text-7xl leading-tight">
-          {RSVP_DETAILS.heading}
-        </h2>
-        <OrnamentDivider className="w-56 sm:w-64" />
-      </SmoothReveal>
+      <SectionHeading>{RSVP_DETAILS.heading}</SectionHeading>
 
       <SmoothReveal delay={130}>
         <p className="font-editorial text-lg sm:text-xl text-[#F8EFEA] leading-relaxed mt-5">
@@ -56,7 +51,6 @@ export default function RsvpSection() {
         </p>
       </SmoothReveal>
 
-      {/* Name Input */}
       <SmoothReveal delay={180} className="mt-8 text-left">
         <label
           htmlFor="rsvp-guest-name"
@@ -74,7 +68,6 @@ export default function RsvpSection() {
         />
       </SmoothReveal>
 
-      {/* Per-Function Guest Counters */}
       <div className="mt-4 text-left">
         {RSVP_DETAILS.functions.map((fn, idx) => {
           const isLast = idx === RSVP_DETAILS.functions.length - 1;
@@ -125,7 +118,6 @@ export default function RsvpSection() {
         })}
       </div>
 
-      {/* Send on WhatsApp Button + Disclaimer */}
       <SmoothReveal delay={400} className="mt-7">
         <button
           type="button"

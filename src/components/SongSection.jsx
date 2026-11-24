@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Play, Pause, SkipBack, SkipForward, Heart } from 'lucide-react';
-import { SmoothReveal, OrnamentDivider } from './SharedUI';
+import { SmoothReveal, SectionHeading } from './SharedUI';
 
 export const SONG_DETAILS = {
   heading: 'Our song',
@@ -75,15 +75,9 @@ export default function SongSection() {
     <div className="w-full max-w-sm mx-auto pt-4 pb-24 px-5 sm:px-6">
       <audio ref={audioRef} src={SONG_DETAILS.audioSrc} preload="metadata" />
 
-      <SmoothReveal delay={60}>
-        <h2 className="font-script gold-shine-text text-6xl sm:text-7xl leading-tight">
-          {SONG_DETAILS.heading}
-        </h2>
-        <OrnamentDivider className="w-56 sm:w-64" />
-      </SmoothReveal>
+      <SectionHeading>{SONG_DETAILS.heading}</SectionHeading>
 
       <SmoothReveal delay={140}>
-        {/* Warm Bronze-Gold Player Card */}
         <div
           style={{
             background:
@@ -91,7 +85,6 @@ export default function SongSection() {
           }}
           className="mt-7 w-full max-w-[305px] mx-auto rounded-2xl p-4 border border-[#E6C673]/25 shadow-[0_18px_40px_rgba(0,0,0,0.65)] text-left"
         >
-          {/* Square Album / Couple Cover Art */}
           <div className="w-full aspect-square rounded-xl overflow-hidden bg-[#2E2212] shadow-inner">
             {!imgError ? (
               <img
@@ -111,7 +104,6 @@ export default function SongSection() {
             )}
           </div>
 
-          {/* Track Info & Heart */}
           <div className="mt-4 flex items-center justify-between gap-3">
             <div className="min-w-0">
               <h3 className="text-base sm:text-lg font-semibold text-white tracking-tight truncate">
@@ -137,7 +129,6 @@ export default function SongSection() {
             </button>
           </div>
 
-          {/* Interactive Progress Scrubber */}
           <div
             onClick={handleSeek}
             role="slider"
@@ -158,7 +149,6 @@ export default function SongSection() {
             </div>
           </div>
 
-          {/* Playback Controls */}
           <div className="mt-2 mb-1 flex items-center justify-center gap-7">
             <button
               onClick={handleRestart}
@@ -192,7 +182,6 @@ export default function SongSection() {
           </div>
         </div>
 
-        {/* Footer Link */}
         <a
           href={SONG_DETAILS.spotifyUrl}
           target="_blank"

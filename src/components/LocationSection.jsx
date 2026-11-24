@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { COUNTDOWN_DETAILS, LOCATION_DETAILS } from '../data/weddingData';
-import { SmoothReveal, OrnamentDivider } from './SharedUI';
+import { SmoothReveal, SectionHeading } from './SharedUI';
 
 export default function LocationSection() {
   const [venueImgError, setVenueImgError] = useState(false);
@@ -41,12 +41,9 @@ export default function LocationSection() {
   return (
     <div className="w-full mt-20 pb-12">
       <div className="w-full max-w-sm mx-auto px-5 sm:px-6">
-        <SmoothReveal delay={60}>
-          <h2 className="font-script gold-shine-text text-5xl sm:text-6xl leading-tight">
-            {COUNTDOWN_DETAILS.heading}
-          </h2>
-          <OrnamentDivider className="w-56 sm:w-64" />
-        </SmoothReveal>
+        <SectionHeading className="text-4xl sm:text-5xl">
+          {COUNTDOWN_DETAILS.heading}
+        </SectionHeading>
 
         <SmoothReveal delay={140}>
           <div className="mt-7 mb-6 flex items-start justify-center gap-2 sm:gap-3">
@@ -76,12 +73,7 @@ export default function LocationSection() {
       </div>
 
       <div className="w-full max-w-sm mx-auto mt-16 px-5 sm:px-6">
-        <SmoothReveal delay={80}>
-          <h2 className="font-script gold-shine-text text-6xl sm:text-7xl leading-tight">
-            {LOCATION_DETAILS.heading}
-          </h2>
-          <OrnamentDivider className="w-56 sm:w-64" />
-        </SmoothReveal>
+        <SectionHeading delay={80}>{LOCATION_DETAILS.heading}</SectionHeading>
 
         <SmoothReveal delay={160}>
           <div className="mt-6">

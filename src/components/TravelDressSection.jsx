@@ -1,19 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TRAVEL_AND_DRESS_DETAILS } from '../data/weddingData';
-import { SmoothReveal, OrnamentDivider } from './SharedUI';
+import { SmoothReveal, SectionHeading } from './SharedUI';
 
 export default function TravelDressSection() {
-  const [imgError, setImgError] = useState(false);
-
   return (
     <div className="w-full pt-8 pb-24">
       <div className="w-full max-w-sm mx-auto px-5 sm:px-6">
-        <SmoothReveal delay={60}>
-          <h2 className="font-script gold-shine-text text-6xl sm:text-7xl leading-tight">
-            {TRAVEL_AND_DRESS_DETAILS.gettingThereHeading}
-          </h2>
-          <OrnamentDivider className="w-56 sm:w-64" />
-        </SmoothReveal>
+        <SectionHeading>{TRAVEL_AND_DRESS_DETAILS.gettingThereHeading}</SectionHeading>
 
         <SmoothReveal delay={140}>
           <p className="font-editorial text-lg sm:text-xl text-[#F8EFEA] leading-relaxed mt-5">
@@ -36,12 +29,7 @@ export default function TravelDressSection() {
       </div>
 
       <div className="w-full max-w-sm mx-auto mt-16 px-5 sm:px-6">
-        <SmoothReveal delay={80}>
-          <h2 className="font-script gold-shine-text text-6xl sm:text-7xl leading-tight">
-            {TRAVEL_AND_DRESS_DETAILS.dressCodeHeading}
-          </h2>
-          <OrnamentDivider className="w-56 sm:w-64" />
-        </SmoothReveal>
+        <SectionHeading delay={80}>{TRAVEL_AND_DRESS_DETAILS.dressCodeHeading}</SectionHeading>
 
         <SmoothReveal delay={160}>
           <p className="font-editorial text-xl sm:text-2xl text-[#F8EFEA] leading-snug mt-5">
@@ -50,17 +38,14 @@ export default function TravelDressSection() {
         </SmoothReveal>
       </div>
 
-      {!imgError && (
-        <SmoothReveal delay={200} className="w-full max-w-md mx-auto mt-10 px-3">
-          <img
-            src={TRAVEL_AND_DRESS_DETAILS.dressCodeImage}
-            alt="Wedding function dress code"
-            loading="lazy"
-            onError={() => setImgError(true)}
-            className="w-full h-auto object-contain mx-auto block"
-          />
-        </SmoothReveal>
-      )}
+      <SmoothReveal delay={200} className="w-full max-w-md mx-auto mt-10 px-3">
+        <img
+          src={TRAVEL_AND_DRESS_DETAILS.dressCodeImage}
+          alt="Wedding function dress code"
+          loading="lazy"
+          className="w-full h-auto object-contain mx-auto block"
+        />
+      </SmoothReveal>
 
       <div className="w-full max-w-sm mx-auto mt-10 px-5 sm:px-6 text-left">
         {TRAVEL_AND_DRESS_DETAILS.dressCodePalettes.map((item, idx) => {

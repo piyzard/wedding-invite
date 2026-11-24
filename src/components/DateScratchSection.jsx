@@ -1,50 +1,78 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { CalendarPlus, Check } from 'lucide-react';
 import { EVENT_DETAILS } from '../data/weddingData';
-import { SmoothReveal, OrnamentDivider } from './SharedUI';
+import { SmoothReveal, SectionHeading } from './SharedUI';
 
 function ScratchCard({ value, label, isRevealed, onReveal }) {
   const canvasRef = useRef(null);
   const isDrawingRef = useRef(false);
+  const lastPointRef = useRef(null);
   const strokeCountRef = useRef(0);
+  const [isScratching, setIsScratching] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const width = 220;
-    const height = 270;
+    const width = 240;
+    const height = 288;
     canvas.width = width;
     canvas.height = height;
 
+    // 1. Rich brushed antique-gold foil base
     const grad = ctx.createLinearGradient(0, 0, width, height);
-    grad.addColorStop(0, '#C8A45D');
-    grad.addColorStop(0.28, '#EBD28E');
-    grad.addColorStop(0.52, '#FFF1BD');
-    grad.addColorStop(0.78, '#D7B46A');
-    grad.addColorStop(1, '#B89248');
-
+    grad.addColorStop(0, '#9E7B3B');
+    grad.addColorStop(0.22, '#DFC076');
+    grad.addColorStop(0.45, '#F6E2A6');
+    grad.addColorStop(0.62, '#C8A355');
+    grad.addColorStop(0.84, '#E8CA82');
+    grad.addColorStop(1, '#8F6D30');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, width, height);
 
-    ctx.strokeStyle = 'rgba(255, 250, 232, 0.24)';
+    // 2. Subtle metallic micro-grain texture
+    for (let i = 0; i < 2400; i++) {
+      const gx = Math.random() * width;
+      const gy = Math.random() * height;
+      ctx.fillStyle =
+        i % 2 === 0 ? 'rgba(255, 250, 230, 0.08)' : 'rgba(65, 42, 12, 0.08)';
+      ctx.fillRect(gx, gy, 1.5, 1.5);
+    }
+
+    // 3. Soft diagonal silk sheen lines
+    ctx.strokeStyle = 'rgba(255, 248, 220, 0.16)';
     ctx.lineWidth = 1;
-    for (let i = -height; i < width + height; i += 7) {
+    for (let i = -height; i < width + height; i += 6) {
       ctx.beginPath();
       ctx.moveTo(i, 0);
-      ctx.lineTo(i + height * 0.5, height);
+      ctx.lineTo(i + height * 0.45, height);
       ctx.stroke();
     }
 
-    ctx.strokeStyle = 'rgba(130, 96, 36, 0.35)';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(7, 7, width - 14, height - 14);
+    // 4. Double inset ornamental border
+    ctx.strokeStyle = 'rgba(92, 63, 18, 0.35)';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(10, 10, width - 20, height - 20);
 
-    ctx.fillStyle = 'rgba(255, 252, 240, 0.88)';
+    ctx.strokeStyle = 'rgba(255, 248, 225, 0.38)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(14, 14, width - 28, height - 28);
+
+    // 5. Delicate center floral/star emblem
+    ctx.save();
+    ctx.translate(width / 2, height / 2);
+    ctx.strokeStyle = 'rgba(255, 250, 232, 0.55)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(0, 0, 22, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.fillStyle = 'rgba(255, 252, 240, 0.9)';
     ctx.font = '20px Georgia, serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('✦', width / 2, height / 2);
+    ctx.fillText('✦', 0, 1);
+    ctx.restore();
   }, []);
 
   const checkScratchProgress = useCallback(() => {
@@ -60,61 +88,101 @@ function ScratchCard({ value, label, isRevealed, onReveal }) {
       if (imageData[i] < 128) transparentPixels++;
     }
 
-    if (transparentPixels / totalSampled > 0.38) onReveal();
+    // Reveal at 52% scratched (faster than 68%, still feels rewarding)
+    if (transparentPixels / totalSampled > 0.52) {
+      onReveal();
+    }
   }, [isRevealed, onReveal]);
 
-  const scratchAt = (clientX, clientY) => {
+  const getCoords = (clientX, clientY) => {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: ((clientX - rect.left) * canvas.width) / rect.width,
+      y: ((clientY - rect.top) * canvas.height) / rect.height,
+    };
+  };
+
+  const scratchTo = (clientX, clientY, isStart = false) => {
     const canvas = canvasRef.current;
     if (!canvas || isRevealed) return;
-    const rect = canvas.getBoundingClientRect();
-    const x = ((clientX - rect.left) * canvas.width) / rect.width;
-    const y = ((clientY - rect.top) * canvas.height) / rect.height;
-
     const ctx = canvas.getContext('2d');
-    ctx.globalCompositeOperation = 'destination-out';
-    ctx.beginPath();
-    ctx.arc(x, y, 26, 0, Math.PI * 2);
-    ctx.fill();
+    const point = getCoords(clientX, clientY);
 
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = 36;
+
+    ctx.shadowColor = 'rgba(0, 0, 0, 1)';
+    ctx.shadowBlur = 6;
+
+    ctx.beginPath();
+    if (isStart || !lastPointRef.current) {
+      ctx.moveTo(point.x, point.y);
+      ctx.lineTo(point.x + 0.1, point.y + 0.1);
+    } else {
+      ctx.moveTo(lastPointRef.current.x, lastPointRef.current.y);
+      ctx.lineTo(point.x, point.y);
+    }
+    ctx.stroke();
+    ctx.restore();
+
+    lastPointRef.current = point;
     strokeCountRef.current += 1;
-    if (strokeCountRef.current % 6 === 0) checkScratchProgress();
+    if (strokeCountRef.current % 6 === 0) {
+      checkScratchProgress();
+    }
   };
 
   return (
     <div className="flex flex-col items-center">
-      <div className="relative w-full aspect-[4/4.8] rounded-xl bg-[#270C14] border border-[#E5C675]/65 shadow-[0_12px_30px_rgba(0,0,0,0.65)] overflow-hidden select-none">
-        <div className="absolute inset-0 flex items-center justify-center px-2">
-          <span
-            className={`font-editorial text-[#F8EFEA] tracking-wide ${
-              value.length > 4 ? 'text-xl sm:text-2xl' : 'text-3xl sm:text-4xl'
-            }`}
-          >
-            {value}
-          </span>
-        </div>
+      <div
+        className={`relative w-full aspect-[4/4.8] rounded-2xl p-[3px] bg-gradient-to-b from-[#E6C673]/75 via-[#9E7B3B]/45 to-[#E6C673]/60 shadow-[0_14px_34px_rgba(0,0,0,0.7)] transition-transform duration-300 ${
+          isScratching ? 'scale-[1.03]' : 'scale-100'
+        }`}
+      >
+        <div className="relative w-full h-full rounded-[13px] bg-[#220910] overflow-hidden select-none">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(230,198,115,0.12)_0%,transparent_72%)] flex items-center justify-center px-2">
+            <span
+              className={`font-editorial gold-shine-text tracking-wide transition-transform duration-700 ease-out ${
+                isRevealed ? 'scale-105' : 'scale-100'
+              } ${value.length > 4 ? 'text-xl sm:text-2xl' : 'text-3xl sm:text-4xl'}`}
+            >
+              {value}
+            </span>
+          </div>
 
-        <canvas
-          ref={canvasRef}
-          onPointerDown={(e) => {
-            isDrawingRef.current = true;
-            e.currentTarget.setPointerCapture(e.pointerId);
-            scratchAt(e.clientX, e.clientY);
-          }}
-          onPointerMove={(e) => {
-            if (isDrawingRef.current) scratchAt(e.clientX, e.clientY);
-          }}
-          onPointerUp={() => {
-            isDrawingRef.current = false;
-            checkScratchProgress();
-          }}
-          onPointerCancel={() => {
-            isDrawingRef.current = false;
-          }}
-          style={{ touchAction: 'none' }}
-          className={`absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing transition-opacity duration-500 ease-out ${
-            isRevealed ? 'opacity-0 pointer-events-none' : 'opacity-100'
-          }`}
-        />
+          <canvas
+            ref={canvasRef}
+            onPointerDown={(e) => {
+              isDrawingRef.current = true;
+              setIsScratching(true);
+              lastPointRef.current = null;
+              e.currentTarget.setPointerCapture(e.pointerId);
+              scratchTo(e.clientX, e.clientY, true);
+            }}
+            onPointerMove={(e) => {
+              if (isDrawingRef.current) scratchTo(e.clientX, e.clientY, false);
+            }}
+            onPointerUp={() => {
+              isDrawingRef.current = false;
+              setIsScratching(false);
+              lastPointRef.current = null;
+              checkScratchProgress();
+            }}
+            onPointerCancel={() => {
+              isDrawingRef.current = false;
+              setIsScratching(false);
+              lastPointRef.current = null;
+            }}
+            style={{ touchAction: 'none' }}
+            className={`absolute inset-0 w-full h-full rounded-[13px] cursor-grab active:cursor-grabbing transition-all duration-700 ease-out ${
+              isRevealed ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100 scale-100'
+            }`}
+          />
+        </div>
       </div>
 
       <span className="mt-3 text-[10px] sm:text-xs uppercase tracking-[0.28em] text-[#E3C9CE]/85">
@@ -142,12 +210,7 @@ export default function DateScratchSection({ onOpenCalendar }) {
 
   return (
     <div className="w-full max-w-sm mx-auto px-5 sm:px-6">
-      <SmoothReveal delay={40}>
-        <h2 className="font-script gold-shine-text text-6xl sm:text-7xl leading-tight">
-          The Date
-        </h2>
-        <OrnamentDivider className="w-56 sm:w-64" />
-      </SmoothReveal>
+      <SectionHeading delay={40}>The Date</SectionHeading>
 
       <SmoothReveal delay={120}>
         <p className="font-editorial italic text-lg sm:text-xl text-[#F4E3C2] mb-8 flex items-center justify-center gap-2">

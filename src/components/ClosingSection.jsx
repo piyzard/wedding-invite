@@ -7,13 +7,14 @@ export const CLOSING_DETAILS = {
   monogramCenter: 'TV',
   monogramBottom: 'तान्वी • विक्रम',
   coupleSignature: 'Tanya & Vikram',
+  creditText: 'Made with ♥ by The Portrait Gallery',
 };
 
 export default function ClosingSection() {
   return (
-    <div className="w-full max-w-sm mx-auto pt-4 pb-24 px-5 sm:px-6 text-center">
+    <div className="w-full max-w-sm mx-auto pt-4 pb-16 px-5 sm:px-6 text-center">
       <SmoothReveal delay={60}>
-        <OrnamentDivider className="w-56 sm:w-64" />
+        <OrnamentDivider />
       </SmoothReveal>
 
       <SmoothReveal delay={130}>
@@ -88,6 +89,12 @@ export default function ClosingSection() {
       <SmoothReveal delay={260}>
         <p className="font-script gold-shine-text text-5xl sm:text-6xl leading-tight">
           {CLOSING_DETAILS.coupleSignature}
+        </p>
+      </SmoothReveal>
+
+      <SmoothReveal delay={320}>
+        <p className="font-editorial italic mt-10 text-sm sm:text-base tracking-wide text-[#E6D2D6]/75">
+          {CLOSING_DETAILS.creditText}
         </p>
       </SmoothReveal>
     </div>
