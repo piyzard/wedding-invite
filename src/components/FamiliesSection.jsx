@@ -34,6 +34,9 @@ export const FAMILIES_DETAILS = {
 };
 
 export default function FamiliesSection() {
+  return null;
+
+  /*
   return (
     <div className="w-full max-w-sm mx-auto pt-8 pb-24 px-5 sm:px-6">
       <SectionHeading>{FAMILIES_DETAILS.heading}</SectionHeading>
@@ -62,4 +65,5 @@ export default function FamiliesSection() {
       </div>
     </div>
   );
+  */
 }

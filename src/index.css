@@ -1,5 +1,26 @@
 @import "tailwindcss";
 
+@keyframes lampPromptWobble {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate3d(0, -2.5px, 0) rotate(-0.8deg);
+  }
+  50% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  75% {
+    transform: translate3d(0, -2.5px, 0) rotate(0.8deg);
+  }
+}
+
+.animate-lamp-wobble {
+  display: inline-block;
+  animation: lampPromptWobble 2.8s ease-in-out infinite;
+  will-change: transform;
+}
+
 @layer base {
   html,
   body {

@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SmoothReveal, OrnamentDivider } from './SharedUI';
 
 export const CLOSING_DETAILS = {
-  signOff: 'With love, the Sharma\nand Mehra families',
-  monogramTop: 'TANYA & VIKRAM',
-  monogramCenter: 'TV',
-  monogramBottom: 'तान्वी • विक्रम',
-  coupleSignature: 'Tanya & Vikram',
+  signOff: 'With love, the Bhattacharya\nand Palit families',
+  logoSrc: '/logo.png',
+  logoAlt: 'Wedding Crest Logo',
+  coupleSignature: 'Piyali & Satya',
   creditText: 'Made with ♥ by The Portrait Gallery',
 };
 
 export default function ClosingSection() {
+  const [logoError, setLogoError] = useState(false);
+
   return (
     <div className="w-full max-w-sm mx-auto pt-4 pb-16 px-5 sm:px-6 text-center">
       <SmoothReveal delay={60}>
@@ -24,65 +25,17 @@ export default function ClosingSection() {
       </SmoothReveal>
 
       <SmoothReveal delay={200}>
-        <div className="relative w-28 h-28 mx-auto my-10 flex items-center justify-center select-none">
-          <svg viewBox="0 0 120 120" className="w-full h-full overflow-visible">
-            <defs>
-              <path id="closingTopArc" d="M 18,60 A 42,42 0 1,1 102,60" fill="none" />
-              <linearGradient id="closingSealGold" x1="0" y1="0" x2="120" y2="120">
-                <stop offset="0%" stopColor="#E6C673" />
-                <stop offset="50%" stopColor="#FFF1BD" />
-                <stop offset="100%" stopColor="#B88E3B" />
-              </linearGradient>
-            </defs>
-
-            <circle
-              cx="60"
-              cy="60"
-              r="52"
-              fill="#1E080F"
-              fillOpacity="0.92"
-              stroke="url(#closingSealGold)"
-              strokeWidth="1.2"
+        <div className="w-28 h-28 mx-auto my-8 flex items-center justify-center select-none">
+          {!logoError ? (
+            <img
+              src={CLOSING_DETAILS.logoSrc}
+              alt={CLOSING_DETAILS.logoAlt}
+              onError={() => setLogoError(true)}
+              className="w-full h-full object-contain block drop-shadow-[0_6px_18px_rgba(0,0,0,0.45)]"
             />
-            <circle
-              cx="60"
-              cy="60"
-              r="34"
-              fill="none"
-              stroke="url(#closingSealGold)"
-              strokeWidth="0.9"
-              strokeOpacity="0.65"
-            />
-
-            <text fill="#E6C673" fontSize="8.2" letterSpacing="2.2" fontWeight="500">
-              <textPath href="#closingTopArc" startOffset="50%" textAnchor="middle">
-                {CLOSING_DETAILS.monogramTop}
-              </textPath>
-            </text>
-
-            <text
-              x="60"
-              y="67"
-              textAnchor="middle"
-              className="font-editorial"
-              fill="#FFF3C4"
-              fontSize="26"
-              letterSpacing="1"
-            >
-              {CLOSING_DETAILS.monogramCenter}
-            </text>
-
-            <text
-              x="60"
-              y="102"
-              textAnchor="middle"
-              fill="#E8D2C5"
-              fontSize="7.2"
-              letterSpacing="1.2"
-            >
-              {CLOSING_DETAILS.monogramBottom}
-            </text>
-          </svg>
+          ) : (
+            <span className="font-script gold-shine-text text-3xl">✦</span>
+          )}
         </div>
       </SmoothReveal>
 
@@ -93,7 +46,7 @@ export default function ClosingSection() {
       </SmoothReveal>
 
       <SmoothReveal delay={320}>
-        <p className="font-editorial italic mt-10 text-sm sm:text-base tracking-wide text-[#E6D2D6]/75">
+        <p className="site-small-text font-editorial italic mt-10 tracking-wide text-[#E6D2D6]/75">
           {CLOSING_DETAILS.creditText}
         </p>
       </SmoothReveal>

@@ -146,13 +146,36 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
               }
             : undefined
         }
-        className={`absolute inset-0 z-30 select-none bg-[#0A0507] transition-opacity duration-200 ${
+        className={`absolute inset-0 z-30 select-none bg-[#0A0507] transition-opacity duration-500 ease-out ${
           !started || !firstVideoPlaying
             ? 'opacity-100 cursor-pointer'
             : 'opacity-0 pointer-events-none'
         }`}
       >
-        <img src="/diya.png" alt="" className="w-full h-full object-cover object-center" />
+        <img
+          src="/diya.png"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
+
+        {!started && (
+          <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-between px-6 pt-12 pb-10 text-center">
+            <div className="w-full max-w-md mx-auto">
+              <p className="font-script gold-shine-text text-4xl sm:text-5xl leading-tight drop-shadow-[0_4px_14px_rgba(0,0,0,0.95)]">
+                You&apos;re invited
+              </p>
+              <p className="mt-1.5 text-[10px] sm:text-xs uppercase tracking-[0.28em] text-[#F8EFEA]/95 drop-shadow-[0_3px_12px_rgba(0,0,0,0.95)]">
+                TO A WEDDING IN KOLKATA
+              </p>
+            </div>
+
+            <div className="mb-2">
+              <span className="animate-lamp-wobble site-small-text font-editorial italic text-[#F8EFEA] tracking-wide drop-shadow-[0_4px_14px_rgba(0,0,0,0.95)]">
+                Tap to light the lamp
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       {started && (
