@@ -6,12 +6,14 @@ const VIDEO_PLAYBACK_RATE = 0.85;
 export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, onScrollDown }) {
   const firstVideoRef = useRef(null);
   const secondVideoRef = useRef(null);
+  const musicAudioRef = useRef(null);
 
   const [heroHeight, setHeroHeight] = useState(() =>
     typeof window !== 'undefined' ? window.innerHeight : 800
   );
   const [started, setStarted] = useState(false);
   const [firstVideoPlaying, setFirstVideoPlaying] = useState(false);
+  const [showTitleBlock, setShowTitleBlock] = useState(false);
   const [secondVideoReady, setSecondVideoReady] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
 
@@ -38,6 +40,7 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
     applyPlaybackRate(secondVideoRef.current);
     firstVideoRef.current?.load();
     secondVideoRef.current?.load();
+    musicAudioRef.current?.load();
   }, []);
 
   useEffect(() => {
@@ -52,6 +55,35 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
     };
   }, [playSecondVideo]);
 
+  useEffect(() => {
+    if (!firstVideoPlaying || showTitleBlock) return;
+
+    const timer = setTimeout(() => {
+      setShowTitleBlock(true);
+    }, 4000);
+
+    return () => clearTimeout(timer);
+  }, [firstVideoPlaying, showTitleBlock]);
+
+  useEffect(() => {
+    const audioEl = musicAudioRef.current;
+    if (!audioEl || !firstVideoPlaying) return;
+
+    audioEl.loop = true;
+    audioEl.muted = isMuted;
+    if (audioEl.paused) {
+      audioEl.currentTime = 0;
+      audioEl.play().catch(() => {});
+    }
+  }, [firstVideoPlaying]);
+
+  const handleMusicEnded = () => {
+    const audioEl = musicAudioRef.current;
+    if (!audioEl) return;
+    audioEl.currentTime = 0;
+    audioEl.play().catch(() => {});
+  };
+
   const handleStart = async () => {
     setStarted(true);
     setFirstVideoPlaying(false);
@@ -59,14 +91,12 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
     if (!v1) return;
     try {
       v1.currentTime = 0;
-      v1.muted = false;
+      v1.muted = true;
       v1.playbackRate = VIDEO_PLAYBACK_RATE;
-      setIsMuted(false);
       await v1.play();
     } catch {
       v1.muted = true;
       v1.playbackRate = VIDEO_PLAYBACK_RATE;
-      setIsMuted(true);
       v1.play().catch(() => {});
     }
   };
@@ -75,7 +105,7 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
     const v2 = secondVideoRef.current;
     if (!v2) return setPlaySecondVideo(true);
     v2.currentTime = 0;
-    v2.muted = isMuted;
+    v2.muted = true;
     v2.playbackRate = VIDEO_PLAYBACK_RATE;
     try {
       await v2.play();
@@ -89,19 +119,39 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
   const toggleMute = () => {
     const nextMuted = !isMuted;
     setIsMuted(nextMuted);
-    if (firstVideoRef.current) firstVideoRef.current.muted = nextMuted;
-    if (secondVideoRef.current) secondVideoRef.current.muted = nextMuted;
+    if (musicAudioRef.current) {
+      musicAudioRef.current.muted = nextMuted;
+      if (!nextMuted && firstVideoPlaying && musicAudioRef.current.paused) {
+        musicAudioRef.current.play().catch(() => {});
+      }
+    }
   };
+
+  const getLineStyle = (delayMs) => ({
+    opacity: showTitleBlock ? 1 : 0,
+    filter: showTitleBlock ? 'blur(0px)' : 'blur(10px)',
+    transform: showTitleBlock ? 'translateY(0px)' : 'translateY(8px)',
+    transition: `opacity 900ms ease-out ${delayMs}ms, filter 900ms ease-out ${delayMs}ms, transform 900ms ease-out ${delayMs}ms`,
+    willChange: 'opacity, filter, transform',
+  });
 
   return (
     <section
       style={{ height: `${heroHeight}px` }}
       className="relative w-full overflow-hidden bg-[#0A0507] shrink-0"
     >
+      <audio
+        ref={musicAudioRef}
+        src="/music.mp3"
+        loop
+        preload="auto"
+        onEnded={handleMusicEnded}
+      />
+
       <video
         ref={firstVideoRef}
         src="/video.mp4"
-        muted={isMuted}
+        muted
         playsInline
         preload="auto"
         onLoadedMetadata={() => applyPlaybackRate(firstVideoRef.current)}
@@ -114,11 +164,51 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
         className="hero-video-layer z-10 absolute inset-0 w-full h-full object-cover object-center"
       />
 
+      {/* Line-by-line blur-in couple title starting 4s after first video plays, staying indefinitely */}
+      <div className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center px-6 translate-y-1 text-center">
+        <p
+          style={getLineStyle(0)}
+          className="font-editorial text-sm sm:text-base text-[#F8EFEA]/90 tracking-wide drop-shadow-[0_3px_12px_rgba(0,0,0,0.95)]"
+        >
+          Welcome to the wedding of
+        </p>
+
+        <div className="mt-5 mb-2 flex flex-col items-center leading-[1.05]">
+          <span
+            style={getLineStyle(450)}
+            className="font-script gold-shine-text text-5xl sm:text-6xl drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]"
+          >
+            Piyali
+          </span>
+          <span
+            style={getLineStyle(900)}
+            className="font-script gold-shine-text text-2xl sm:text-3xl my-0.5 drop-shadow-[0_3px_12px_rgba(0,0,0,0.95)]"
+          >
+            &amp;
+          </span>
+          <span
+            style={getLineStyle(1350)}
+            className="font-script gold-shine-text text-5xl sm:text-6xl drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]"
+          >
+            Satyabrata
+          </span>
+        </div>
+
+        <div
+          style={getLineStyle(1800)}
+          className="my-2 flex items-center justify-center gap-2 text-[#E6C673]/85 text-xs select-none"
+        >
+          <span className="h-[1px] w-8 bg-gradient-to-r from-transparent to-[#E6C673]/70" />
+          <span>✦</span>
+          <span className="h-[1px] w-8 bg-gradient-to-l from-transparent to-[#E6C673]/70" />
+        </div>
+      </div>
+
       <video
         ref={secondVideoRef}
         src="/video2.mp4"
         loop
-        muted={isMuted}
+        muted
         playsInline
         preload="auto"
         onLoadedMetadata={() => applyPlaybackRate(secondVideoRef.current)}
@@ -127,7 +217,7 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
           setSecondVideoReady(true);
           setPlaySecondVideo(true);
         }}
-        className={`hero-video-layer z-20 absolute inset-0 w-full h-full object-cover object-center ${
+        className={`hero-video-layer z-[15] absolute inset-0 w-full h-full object-cover object-center ${
           playSecondVideo && secondVideoReady ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
       />
@@ -158,24 +248,27 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
 
-        {!started && (
-          <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-between px-6 pt-12 pb-10 text-center">
-            <div className="w-full max-w-md mx-auto">
-              <p className="font-script gold-shine-text text-4xl sm:text-5xl leading-tight drop-shadow-[0_4px_14px_rgba(0,0,0,0.95)]">
-                You&apos;re invited
-              </p>
-              <p className="mt-1.5 text-[10px] sm:text-xs uppercase tracking-[0.28em] text-[#F8EFEA]/95 drop-shadow-[0_3px_12px_rgba(0,0,0,0.95)]">
-                TO A WEDDING IN KOLKATA
-              </p>
-            </div>
-
-            <div className="mb-2">
-              <span className="animate-lamp-wobble site-small-text font-editorial italic text-[#F8EFEA] tracking-wide drop-shadow-[0_4px_14px_rgba(0,0,0,0.95)]">
-                Tap to light the lamp
-              </span>
-            </div>
+        <div
+          style={{ transition: 'opacity 2500ms ease-in-out' }}
+          className={`pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-between px-6 pt-16 pb-10 text-center ${
+            !started ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <div className="w-full max-w-md mx-auto">
+            <p className="font-script gold-shine-text text-4xl sm:text-5xl leading-tight drop-shadow-[0_4px_14px_rgba(0,0,0,0.95)]">
+              You&apos;re invited
+            </p>
+            <p className="mt-1.5 text-[10px] sm:text-xs uppercase tracking-[0.28em] text-[#F8EFEA]/95 drop-shadow-[0_3px_12px_rgba(0,0,0,0.95)]">
+              TO A WEDDING IN KOLKATA
+            </p>
           </div>
-        )}
+
+          <div className="mb-2">
+            <span className="animate-lamp-wobble site-small-text font-editorial italic text-[#F8EFEA] tracking-wide drop-shadow-[0_4px_14px_rgba(0,0,0,0.95)]">
+              Tap to light the lamp
+            </span>
+          </div>
+        </div>
       </div>
 
       {started && (
