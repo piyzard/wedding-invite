@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Volume2, VolumeX, ChevronDown } from 'lucide-react';
 
+const VIDEO_PLAYBACK_RATE = 0.85;
+
 export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, onScrollDown }) {
   const firstVideoRef = useRef(null);
   const secondVideoRef = useRef(null);
@@ -11,6 +13,12 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
   const [started, setStarted] = useState(false);
   const [secondVideoReady, setSecondVideoReady] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+
+  const applyPlaybackRate = (videoEl) => {
+    if (videoEl) {
+      videoEl.playbackRate = VIDEO_PLAYBACK_RATE;
+    }
+  };
 
   useEffect(() => {
     let lastWidth = window.innerWidth;
@@ -25,6 +33,8 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
   }, []);
 
   useEffect(() => {
+    applyPlaybackRate(firstVideoRef.current);
+    applyPlaybackRate(secondVideoRef.current);
     secondVideoRef.current?.load();
   }, []);
 
@@ -47,10 +57,12 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
     try {
       v1.currentTime = 0;
       v1.muted = false;
+      v1.playbackRate = VIDEO_PLAYBACK_RATE;
       setIsMuted(false);
       await v1.play();
     } catch {
       v1.muted = true;
+      v1.playbackRate = VIDEO_PLAYBACK_RATE;
       setIsMuted(true);
       v1.play().catch(() => {});
     }
@@ -61,6 +73,7 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
     if (!v2) return setPlaySecondVideo(true);
     v2.currentTime = 0;
     v2.muted = isMuted;
+    v2.playbackRate = VIDEO_PLAYBACK_RATE;
     try {
       await v2.play();
       setSecondVideoReady(true);
@@ -88,6 +101,8 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
         muted={isMuted}
         playsInline
         preload="auto"
+        onLoadedMetadata={() => applyPlaybackRate(firstVideoRef.current)}
+        onPlay={() => applyPlaybackRate(firstVideoRef.current)}
         onEnded={handleFirstVideoEnded}
         className="hero-video-layer z-10 absolute inset-0 w-full h-full object-cover object-center"
       />
@@ -99,7 +114,9 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
         muted={isMuted}
         playsInline
         preload="auto"
+        onLoadedMetadata={() => applyPlaybackRate(secondVideoRef.current)}
         onPlaying={() => {
+          applyPlaybackRate(secondVideoRef.current);
           setSecondVideoReady(true);
           setPlaySecondVideo(true);
         }}
