@@ -150,7 +150,7 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
 
       <video
         ref={firstVideoRef}
-        src="/newvideo.mp4"
+        src="/video.mp4"
         muted
         playsInline
         preload="auto"
@@ -206,7 +206,7 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
 
       <video
         ref={secondVideoRef}
-        src="/newvideo2.mp4"
+        src="/video2.mp4"
         loop
         muted
         playsInline
