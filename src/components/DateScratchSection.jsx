@@ -3,10 +3,13 @@ import { CalendarPlus, Check } from 'lucide-react';
 import { EVENT_DETAILS } from '../data/weddingData';
 import { SmoothReveal, SectionHeading } from './SharedUI';
 
+const BRUSH_WIDTH = 56; // Bigger brush (was 36)
+
 function ScratchCard({ value, label, isRevealed, onReveal }) {
   const canvasRef = useRef(null);
   const isDrawingRef = useRef(false);
   const lastPointRef = useRef(null);
+  const midPointRef = useRef(null);
   const strokeCountRef = useRef(0);
   const [isScratching, setIsScratching] = useState(false);
 
@@ -88,7 +91,6 @@ function ScratchCard({ value, label, isRevealed, onReveal }) {
       if (imageData[i] < 128) transparentPixels++;
     }
 
-    // Reveal at 52% scratched (faster than 68%, still feels rewarding)
     if (transparentPixels / totalSampled > 0.52) {
       onReveal();
     }
@@ -113,20 +115,35 @@ function ScratchCard({ value, label, isRevealed, onReveal }) {
     ctx.globalCompositeOperation = 'destination-out';
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.lineWidth = 36;
+    ctx.lineWidth = BRUSH_WIDTH;
 
     ctx.shadowColor = 'rgba(0, 0, 0, 1)';
-    ctx.shadowBlur = 6;
+    ctx.shadowBlur = 12;
 
-    ctx.beginPath();
     if (isStart || !lastPointRef.current) {
-      ctx.moveTo(point.x, point.y);
-      ctx.lineTo(point.x + 0.1, point.y + 0.1);
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, BRUSH_WIDTH / 2, 0, Math.PI * 2);
+      ctx.fill();
+      midPointRef.current = point;
     } else {
-      ctx.moveTo(lastPointRef.current.x, lastPointRef.current.y);
-      ctx.lineTo(point.x, point.y);
+      const nextMid = {
+        x: (lastPointRef.current.x + point.x) / 2,
+        y: (lastPointRef.current.y + point.y) / 2,
+      };
+      const startMid = midPointRef.current || lastPointRef.current;
+
+      ctx.beginPath();
+      ctx.moveTo(startMid.x, startMid.y);
+      ctx.quadraticCurveTo(
+        lastPointRef.current.x,
+        lastPointRef.current.y,
+        nextMid.x,
+        nextMid.y
+      );
+      ctx.stroke();
+
+      midPointRef.current = nextMid;
     }
-    ctx.stroke();
     ctx.restore();
 
     lastPointRef.current = point;
@@ -160,6 +177,7 @@ function ScratchCard({ value, label, isRevealed, onReveal }) {
               isDrawingRef.current = true;
               setIsScratching(true);
               lastPointRef.current = null;
+              midPointRef.current = null;
               e.currentTarget.setPointerCapture(e.pointerId);
               scratchTo(e.clientX, e.clientY, true);
             }}
@@ -170,12 +188,14 @@ function ScratchCard({ value, label, isRevealed, onReveal }) {
               isDrawingRef.current = false;
               setIsScratching(false);
               lastPointRef.current = null;
+              midPointRef.current = null;
               checkScratchProgress();
             }}
             onPointerCancel={() => {
               isDrawingRef.current = false;
               setIsScratching(false);
               lastPointRef.current = null;
+              midPointRef.current = null;
             }}
             style={{ touchAction: 'none' }}
             className={`absolute inset-0 w-full h-full rounded-[13px] cursor-grab active:cursor-grabbing transition-all duration-700 ease-out ${
