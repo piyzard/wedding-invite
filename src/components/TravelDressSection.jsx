@@ -34,7 +34,7 @@ export default function TravelDressSection() {
         <SectionHeading delay={80}>{TRAVEL_AND_DRESS_DETAILS.dressCodeHeading}</SectionHeading>
 
         <SmoothReveal delay={160}>
-          <p className="font-editorial text-xl sm:text-2xl text-[#F8EFEA] leading-snug mt-5">
+          <p className="font-editorial text-lg sm:text-xl text-[#F8EFEA] leading-snug mt-5">
             {TRAVEL_AND_DRESS_DETAILS.dressCodeHint}
           </p>
         </SmoothReveal>

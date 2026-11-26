@@ -6,7 +6,7 @@ export const RSVP_DETAILS = {
   heading: 'Will you join us?',
   subtitle: 'Please let us know how many of you are coming to each function, by 20 January.',
   nameLabel: 'YOUR NAME',
-  namePlaceholder: 'e.g. Shreya Sharma',
+  namePlaceholder: 'e.g. Ek Baar Baman',
   whatsappNumber: '918910322203',
   buttonText: 'SEND ON WHATSAPP',
   disclaimer: 'This opens WhatsApp with your reply written out. Nothing is sent until you press send.',
