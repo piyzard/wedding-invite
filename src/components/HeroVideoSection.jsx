@@ -150,7 +150,7 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
 
       <video
         ref={firstVideoRef}
-        src="/newvideo.mp4"
+        src="/video.mp4"
         muted
         playsInline
         preload="auto"
@@ -206,7 +206,7 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
 
       <video
         ref={secondVideoRef}
-        src="/newvideo2.mp4"
+        src="/video2.mp4"
         loop
         muted
         playsInline
@@ -243,14 +243,14 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
         }`}
       >
         <img
-          src="/newdiya.png"
+          src="/diya.png"
           alt=""
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
 
         <div
           style={{ transition: 'opacity 2500ms ease-in-out' }}
-          className={`pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-between px-6 pt-16 pb-10 text-center ${
+          className={`pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-between px-6 pt-10 pb-10 text-center ${
             !started ? 'opacity-100' : 'opacity-0'
           }`}
         >
@@ -271,17 +271,16 @@ export default function HeroVideoSection({ playSecondVideo, setPlaySecondVideo, 
         </div>
       </div>
 
-
       {/* Bottom-right circular white logo with shadow under the logo and above the white background */}
-{/*
-      <div className="pointer-events-none absolute bottom-15 right-4 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center p-1.5 shadow-[0_4px_14px_rgba(0,0,0,0.85),inset_0_2px_6px_rgba(0,0,0,0.25)] overflow-hidden">
+      {/*
+      <div className="pointer-events-none absolute bottom-4 right-4 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center p-1.5 shadow-[0_4px_14px_rgba(0,0,0,0.85),inset_0_2px_6px_rgba(0,0,0,0.25)] overflow-hidden">
         <img
           src="/logo.png"
           alt=""
           className="w-full h-full object-contain rounded-full drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)]"
         />
       </div>
-*/}
+      */}
 
       {started && (
         <button
