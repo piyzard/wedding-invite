@@ -11,29 +11,35 @@ export const RSVP_DETAILS = {
   buttonText: 'SEND ON WHATSAPP',
   disclaimer: 'This opens WhatsApp with your reply written out. Nothing is sent until you press send.',
   functions: [
-    { id: 'mehendi', title: 'Mehendi', date: 'Fri, 12 Feb', defaultCount: 1 },
-    { id: 'sangeet', title: 'Sangeet', date: 'Sat, 13 Feb', defaultCount: 1 },
-    { id: 'wedding', title: 'Wedding', date: 'Sun, 14 Feb', defaultCount: 1 },
+    { id: 'mehendi', title: 'Mehendi', date: 'Tue, 09 Feb', defaultCount: 1 },
+    { id: 'haldi', title: 'Haldi', date: 'Thu, 11 Feb', defaultCount: 1 },
+    { id: 'wedding', title: 'Wedding', date: 'Thu, 11 Feb', defaultCount: 1 },
   ],
 };
 
 export default function RsvpSection() {
   const [guestName, setGuestName] = useState('');
   const [counts, setCounts] = useState(() =>
-    RSVP_DETAILS.functions.reduce((acc, fn) => ({ ...acc, [fn.id]: fn.defaultCount }), {})
+    RSVP_DETAILS.functions.reduce((acc, fn) => {
+      acc[fn.id] = fn.defaultCount ?? 0;
+      return acc;
+    }, {})
   );
 
   const updateCount = (id, delta) => {
+    const defaultVal =
+      RSVP_DETAILS.functions.find((fn) => fn.id === id)?.defaultCount ?? 0;
+
     setCounts((prev) => ({
       ...prev,
-      [id]: Math.max(0, Math.min(20, (prev[id] ?? 0) + delta)),
+      [id]: Math.max(0, Math.min(20, (prev[id] ?? defaultVal) + delta)),
     }));
   };
 
   const handleSendWhatsApp = () => {
     const name = guestName.trim() || 'A guest';
     const breakdown = RSVP_DETAILS.functions
-      .map((fn) => `• ${fn.title} (${fn.date}): ${counts[fn.id]}`)
+      .map((fn) => `• ${fn.title} (${fn.date}): ${counts[fn.id] ?? fn.defaultCount ?? 0}`)
       .join('\n');
 
     const message = `Hi! RSVP from *${name}*:\n\n${breakdown}`;
@@ -71,7 +77,7 @@ export default function RsvpSection() {
       <div className="mt-4 text-left">
         {RSVP_DETAILS.functions.map((fn, idx) => {
           const isLast = idx === RSVP_DETAILS.functions.length - 1;
-          const count = counts[fn.id] ?? 0;
+          const count = counts[fn.id] ?? fn.defaultCount ?? 0;
 
           return (
             <SmoothReveal

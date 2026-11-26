@@ -33,7 +33,7 @@ export const INVITATION_DETAILS = {
 export const STORY_DETAILS = {
   heading: 'Meet us',
   paragraph:
-    "Introduced through common friends on social media, what began as a connection slowly turned into a friendship, and eventually, something much more. Six years later, we’re still each other’s favourite person, biggest cheerleader and, most importantly, favourite company. Piyali is happiest around good food, F.R.I.E.N.D.S., Taarak Mehta and her favourite mindless  chaotic comedies, while Satya has a soft spot for gaming, all things Marvel and a good movie. From sharing meals to sharing laughs and making the most of the simplest moments, we have built a little world of our own. And now, six years of friendship, love and being gloriously ourselves have led us to this moment — GETTING MARRIED!",
+    "Introduced through common friends on social media, what began as a connection slowly turned into a friendship, and eventually, something much more. Six years later, we’re still each other’s favourite person, biggest cheerleader and, most importantly, favourite company. Piyali is happiest around good food, F.R.I.E.N.D.S., Taarak Mehta and her favourite mindless  chaotic comedy movies, while Satya has a soft spot for gaming, all things Marvel and a good movie. From sharing meals to sharing laughs and making the most of the simplest moments, we have built a little world of our own. And now, six years of friendship, love and being gloriously ourselves have led us to this moment — GETTING MARRIED!",
   milestones: [
     {
       date: 'Holi 2021',
